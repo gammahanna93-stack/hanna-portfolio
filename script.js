@@ -76,8 +76,8 @@ const defaultSiteContent = {
     eyebrow: "Contact",
     heading: "Let's create visuals with a premium digital presence.",
     email: "osthanna91@gmail.com",
-    telegramLabel: "Telegram",
-    telegramUrl: "https://t.me/Promtiai_bot",
+    threadsLabel: "Threads",
+    threadsUrl: "https://www.threads.com/@hanna__ostroverkh",
     linkedinLabel: "LinkedIn",
     linkedinUrl: "https://www.linkedin.com/in/hanna-ostroverkh-b8003a1a1/",
     formLabels: {
@@ -103,6 +103,8 @@ const defaultSiteContent = {
 
 let siteContent = structuredClone(defaultSiteContent);
 let portfolioData = structuredClone(defaultPortfolioData);
+let heroShowcaseIndex = 0;
+let heroShowcaseTimer;
 
 const iconPaths = {
   spark: '<path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8L12 2z"/><path d="M5 17l.8 2.2L8 20l-2.2.8L5 23l-.8-2.2L2 20l2.2-.8L5 17z"/>',
@@ -147,6 +149,10 @@ function loadAdminState() {
     const parsed = JSON.parse(saved);
     if (parsed.siteContent) siteContent = parsed.siteContent;
     if (parsed.portfolioData) portfolioData = parsed.portfolioData;
+    if (!siteContent.contact.threadsUrl) {
+      siteContent.contact.threadsLabel = defaultSiteContent.contact.threadsLabel;
+      siteContent.contact.threadsUrl = defaultSiteContent.contact.threadsUrl;
+    }
     if (!siteContent.contact.linkedinUrl || siteContent.contact.linkedinUrl === "#") {
       siteContent.contact.linkedinUrl = defaultSiteContent.contact.linkedinUrl;
     }
@@ -198,8 +204,8 @@ function renderStaticContent() {
   setText("[data-contact-heading]", siteContent.contact.heading);
   setText("[data-contact-email]", siteContent.contact.email);
   setHref("[data-contact-email]", `mailto:${siteContent.contact.email}`);
-  setText("[data-contact-telegram]", siteContent.contact.telegramLabel);
-  setHref("[data-contact-telegram]", siteContent.contact.telegramUrl);
+  setText("[data-contact-threads]", siteContent.contact.threadsLabel);
+  setHref("[data-contact-threads]", siteContent.contact.threadsUrl);
   setText("[data-contact-linkedin]", siteContent.contact.linkedinLabel);
   setHref("[data-contact-linkedin]", siteContent.contact.linkedinUrl);
   setText("[data-form-name]", siteContent.contact.formLabels.name);
@@ -217,21 +223,50 @@ function renderStaticContent() {
 
 function renderHeroShowcase() {
   const target = document.querySelector("[data-hero-showcase]");
-  const firstCategory = (portfolioData.categories || [])[0];
-  const heroProject = firstCategory?.projects?.[0];
+  const projects = getHeroShowcaseProjects();
 
-  if (!heroProject) {
+  clearInterval(heroShowcaseTimer);
+
+  if (!projects.length) {
     target.innerHTML = "";
     return;
   }
 
+  heroShowcaseIndex = heroShowcaseIndex % projects.length;
+  updateHeroShowcase(target, projects[heroShowcaseIndex], projects);
+
+  if (projects.length > 1) {
+    heroShowcaseTimer = setInterval(() => {
+      heroShowcaseIndex = (heroShowcaseIndex + 1) % projects.length;
+      target.classList.add("is-changing");
+
+      setTimeout(() => {
+        updateHeroShowcase(target, projects[heroShowcaseIndex], projects);
+        target.classList.remove("is-changing");
+      }, 420);
+    }, 5200);
+  }
+}
+
+function getHeroShowcaseProjects() {
+  return (portfolioData.categories || [])
+    .flatMap((category) => (category.projects || []).map((project) => ({ ...project, category: category.title })))
+    .filter((project) => project.src && project.title)
+    .slice(0, 8);
+}
+
+function updateHeroShowcase(target, project, projects) {
   target.innerHTML = `
     <div class="hero-showcase-image">
-      <img src="${escapeHtml(heroProject.src)}" alt="${escapeHtml(heroProject.title)}" loading="eager">
+      <img src="${escapeHtml(project.src)}" alt="${escapeHtml(project.title)}" loading="eager">
     </div>
     <div class="hero-showcase-caption">
-      <span>${escapeHtml(firstCategory.title)}</span>
-      <strong>${escapeHtml(heroProject.title)}</strong>
+      <span>${escapeHtml(project.category)}</span>
+      <strong>${escapeHtml(project.title)}</strong>
+      <p>${escapeHtml(project.description || "")}</p>
+      <div class="hero-showcase-dots" aria-label="Featured project position">
+        ${projects.map((item, index) => `<i class="${item.src === project.src ? "is-active" : ""}"></i>`).join("")}
+      </div>
     </div>
   `;
 }
@@ -272,16 +307,23 @@ function renderFilters(categories) {
   };
 }
 
-function projectCard(project) {
+function projectCard(project, index) {
+  const isOpen = index === 0;
   return `
-    <article class="project-card reveal">
-      <div class="project-image">
-        <img src="${escapeHtml(project.src)}" alt="${escapeHtml(project.title)}" loading="lazy">
-      </div>
-      <div class="project-body">
-        <h3>${escapeHtml(project.title)}</h3>
-        <p>${escapeHtml(project.description)}</p>
-        <div class="tag-list">${(project.tags || []).map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("")}</div>
+    <article class="project-card reveal ${isOpen ? "is-open" : ""}" data-project-card>
+      <button class="project-toggle" type="button" aria-expanded="${isOpen ? "true" : "false"}">
+        <span>${escapeHtml(project.title)}</span>
+        <small>${escapeHtml((project.tags || []).slice(0, 2).join(" / "))}</small>
+        <i aria-hidden="true"></i>
+      </button>
+      <div class="project-content">
+        <div class="project-image">
+          <img src="${escapeHtml(project.src)}" alt="${escapeHtml(project.title)}" loading="lazy">
+        </div>
+        <div class="project-body">
+          <p>${escapeHtml(project.description)}</p>
+          <div class="tag-list">${(project.tags || []).map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("")}</div>
+        </div>
       </div>
     </article>
   `;
@@ -318,8 +360,9 @@ function renderPortfolio() {
       </div>
     </section>
   `).join("");
+  initProjectAccordions();
 
-  const featured = categories.flatMap((category) => (category.projects || []).map((project) => ({ ...project, category: category.title }))).slice(0, 3);
+  const featured = getFeaturedProjects(categories);
   featuredTarget.innerHTML = featured.map((project) => `
     <article class="featured-card reveal">
       <div class="featured-media">
@@ -333,6 +376,52 @@ function renderPortfolio() {
       </div>
     </article>
   `).join("");
+}
+
+function initProjectAccordions() {
+  document.querySelectorAll(".category-block").forEach((categoryBlock) => {
+    categoryBlock.addEventListener("click", (event) => {
+      const toggle = event.target.closest(".project-toggle");
+      if (!toggle || !categoryBlock.contains(toggle)) return;
+
+      const card = toggle.closest("[data-project-card]");
+      const wasOpen = card.classList.contains("is-open");
+
+      categoryBlock.querySelectorAll("[data-project-card]").forEach((item) => {
+        item.classList.remove("is-open");
+        item.querySelector(".project-toggle").setAttribute("aria-expanded", "false");
+      });
+
+      if (!wasOpen) {
+        card.classList.add("is-open");
+        toggle.setAttribute("aria-expanded", "true");
+      }
+    });
+  });
+}
+
+function getFeaturedProjects(categories) {
+  const categoryPicks = categories
+    .map((category, index) => {
+      const projects = category.projects || [];
+      if (!projects.length) return null;
+      const pickIndex = Math.min(index, projects.length - 1);
+      return { ...projects[pickIndex], category: category.title };
+    })
+    .filter(Boolean);
+
+  const preferredOrder = [
+    "Luxury Glam Portraits",
+    "Zodiac Couture Concepts",
+    "Carnival Candy Editorials",
+    "Botanical Fantasy Fashion",
+    "Pop Candy Visual Concepts",
+    "Romantic Floral Fashion"
+  ];
+
+  return categoryPicks
+    .sort((a, b) => preferredOrder.indexOf(a.category) - preferredOrder.indexOf(b.category))
+    .slice(0, 6);
 }
 
 function populateAdminPanel() {
@@ -440,7 +529,34 @@ function initNav() {
   });
 }
 
+function initContactForm() {
+  const form = document.querySelector("[data-contact-form]");
+  const status = document.querySelector("[data-form-status]");
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const data = new FormData(form);
+    const name = data.get("name") || "";
+    const email = data.get("email") || "";
+    const projectType = data.get("project_type") || "";
+    const message = data.get("message") || "";
+    const subject = `Portfolio inquiry from ${name}`;
+    const body = [
+      `Name: ${name}`,
+      `Email: ${email}`,
+      `Project type: ${projectType}`,
+      "",
+      "Message:",
+      message
+    ].join("\n");
+
+    window.location.href = `mailto:${siteContent.contact.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    status.textContent = "Your email app should open with a prepared message. If it does not, please write directly to the email above.";
+  });
+}
+
 loadAdminState();
 renderAll();
 initAdminPanel();
 initNav();
+initContactForm();

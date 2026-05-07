@@ -1,5 +1,5 @@
 window.PORTFOLIO_DATA = {
-  "generatedAt": "2026-05-06T12:41:04.539Z",
+  "generatedAt": "2026-05-07T12:31:56.255Z",
   "categories": [
     {
       "title": "Botanical Fantasy Fashion",
@@ -175,18 +175,6 @@ window.PORTFOLIO_DATA = {
             "Editorial Concepts",
             "Prompt Design"
           ]
-        },
-        {
-          "title": "Desert Disco Glam",
-          "src": "assets/Luxury Glam Portraits/promti_1777295376750.png",
-          "fileName": "promti_1777295376750.png",
-          "description": "Desert Disco Glam builds a confident luxury portrait with polished accessories, cinematic lighting, and high-fashion prompt direction.",
-          "tags": [
-            "AI Portraits",
-            "Creative Direction",
-            "Editorial Concepts",
-            "Prompt Design"
-          ]
         }
       ]
     },
@@ -354,10 +342,10 @@ window.PORTFOLIO_DATA = {
       "description": "Symbolic AI concepts with celestial atmosphere, character-led storytelling, and expressive art direction.",
       "projects": [
         {
-          "title": "Celestial Libra Couture",
+          "title": "Aries Couture Concept",
           "src": "assets/Zodiac Couture Concepts/photo_4_2026-04-23_19-06-35.jpg",
           "fileName": "photo_4_2026-04-23_19-06-35.jpg",
-          "description": "Celestial Libra Couture blends symbolic storytelling, atmospheric AI art, and celestial visual language.",
+          "description": "Aries Couture Concept interprets Aries through symbolic couture styling, celestial atmosphere, and polished AI art direction.",
           "tags": [
             "AI Art",
             "Prompt Design",
@@ -366,10 +354,10 @@ window.PORTFOLIO_DATA = {
           ]
         },
         {
-          "title": "Crystal Zodiac Muse",
+          "title": "Taurus Couture Concept",
           "src": "assets/Zodiac Couture Concepts/photo_5_2026-04-23_19-06-35.jpg",
           "fileName": "photo_5_2026-04-23_19-06-35.jpg",
-          "description": "Crystal Zodiac Muse blends symbolic storytelling, atmospheric AI art, and celestial visual language.",
+          "description": "Taurus Couture Concept interprets Taurus through symbolic couture styling, celestial atmosphere, and polished AI art direction.",
           "tags": [
             "AI Art",
             "Prompt Design",
@@ -378,10 +366,10 @@ window.PORTFOLIO_DATA = {
           ]
         },
         {
-          "title": "Astral Sign Editorial",
+          "title": "Gemini Couture Concept",
           "src": "assets/Zodiac Couture Concepts/photo_6_2026-04-23_19-06-35.jpg",
           "fileName": "photo_6_2026-04-23_19-06-35.jpg",
-          "description": "Astral Sign Editorial blends symbolic storytelling, atmospheric AI art, and celestial visual language.",
+          "description": "Gemini Couture Concept interprets Gemini through symbolic couture styling, celestial atmosphere, and polished AI art direction.",
           "tags": [
             "AI Art",
             "Prompt Design",
@@ -390,10 +378,10 @@ window.PORTFOLIO_DATA = {
           ]
         },
         {
-          "title": "Sacred Symbol Portrait",
+          "title": "Cancer Couture Concept",
           "src": "assets/Zodiac Couture Concepts/photo_7_2026-04-23_19-06-35.jpg",
           "fileName": "photo_7_2026-04-23_19-06-35.jpg",
-          "description": "Sacred Symbol Portrait blends symbolic storytelling, atmospheric AI art, and celestial visual language.",
+          "description": "Cancer Couture Concept interprets Cancer through symbolic couture styling, celestial atmosphere, and polished AI art direction.",
           "tags": [
             "AI Art",
             "Prompt Design",
@@ -402,10 +390,10 @@ window.PORTFOLIO_DATA = {
           ]
         },
         {
-          "title": "Star Map Couture",
+          "title": "Leo Couture Concept",
           "src": "assets/Zodiac Couture Concepts/photo_8_2026-04-23_19-06-35.jpg",
           "fileName": "photo_8_2026-04-23_19-06-35.jpg",
-          "description": "Star Map Couture blends symbolic storytelling, atmospheric AI art, and celestial visual language.",
+          "description": "Leo Couture Concept interprets Leo through symbolic couture styling, celestial atmosphere, and polished AI art direction.",
           "tags": [
             "AI Art",
             "Prompt Design",
@@ -414,10 +402,10 @@ window.PORTFOLIO_DATA = {
           ]
         },
         {
-          "title": "Celestial Libra Couture",
+          "title": "Virgo Couture Concept",
           "src": "assets/Zodiac Couture Concepts/photo_9_2026-04-23_19-06-35.jpg",
           "fileName": "photo_9_2026-04-23_19-06-35.jpg",
-          "description": "Celestial Libra Couture blends symbolic storytelling, atmospheric AI art, and celestial visual language.",
+          "description": "Virgo Couture Concept interprets Virgo through symbolic couture styling, celestial atmosphere, and polished AI art direction.",
           "tags": [
             "AI Art",
             "Prompt Design",
@@ -426,10 +414,10 @@ window.PORTFOLIO_DATA = {
           ]
         },
         {
-          "title": "Crystal Zodiac Muse",
+          "title": "Libra Couture Concept",
           "src": "assets/Zodiac Couture Concepts/photo_10_2026-04-23_19-06-35.jpg",
           "fileName": "photo_10_2026-04-23_19-06-35.jpg",
-          "description": "Crystal Zodiac Muse blends symbolic storytelling, atmospheric AI art, and celestial visual language.",
+          "description": "Libra Couture Concept interprets Libra through symbolic couture styling, celestial atmosphere, and polished AI art direction.",
           "tags": [
             "AI Art",
             "Prompt Design",
@@ -438,10 +426,10 @@ window.PORTFOLIO_DATA = {
           ]
         },
         {
-          "title": "Astral Sign Editorial",
+          "title": "Scorpio Couture Concept",
           "src": "assets/Zodiac Couture Concepts/photo_11_2026-04-23_19-06-35.jpg",
           "fileName": "photo_11_2026-04-23_19-06-35.jpg",
-          "description": "Astral Sign Editorial blends symbolic storytelling, atmospheric AI art, and celestial visual language.",
+          "description": "Scorpio Couture Concept interprets Scorpio through symbolic couture styling, celestial atmosphere, and polished AI art direction.",
           "tags": [
             "AI Art",
             "Prompt Design",
@@ -450,10 +438,10 @@ window.PORTFOLIO_DATA = {
           ]
         },
         {
-          "title": "Sacred Symbol Portrait",
+          "title": "Sagittarius Couture Concept",
           "src": "assets/Zodiac Couture Concepts/photo_12_2026-04-23_19-06-35.jpg",
           "fileName": "photo_12_2026-04-23_19-06-35.jpg",
-          "description": "Sacred Symbol Portrait blends symbolic storytelling, atmospheric AI art, and celestial visual language.",
+          "description": "Sagittarius Couture Concept interprets Sagittarius through symbolic couture styling, celestial atmosphere, and polished AI art direction.",
           "tags": [
             "AI Art",
             "Prompt Design",
@@ -462,10 +450,10 @@ window.PORTFOLIO_DATA = {
           ]
         },
         {
-          "title": "Star Map Couture",
+          "title": "Capricorn Couture Concept",
           "src": "assets/Zodiac Couture Concepts/photo_13_2026-04-23_19-06-35.jpg",
           "fileName": "photo_13_2026-04-23_19-06-35.jpg",
-          "description": "Star Map Couture blends symbolic storytelling, atmospheric AI art, and celestial visual language.",
+          "description": "Capricorn Couture Concept interprets Capricorn through symbolic couture styling, celestial atmosphere, and polished AI art direction.",
           "tags": [
             "AI Art",
             "Prompt Design",
@@ -474,10 +462,10 @@ window.PORTFOLIO_DATA = {
           ]
         },
         {
-          "title": "Celestial Libra Couture",
+          "title": "Aquarius Couture Concept",
           "src": "assets/Zodiac Couture Concepts/photo_14_2026-04-23_19-06-35.jpg",
           "fileName": "photo_14_2026-04-23_19-06-35.jpg",
-          "description": "Celestial Libra Couture blends symbolic storytelling, atmospheric AI art, and celestial visual language.",
+          "description": "Aquarius Couture Concept interprets Aquarius through symbolic couture styling, celestial atmosphere, and polished AI art direction.",
           "tags": [
             "AI Art",
             "Prompt Design",
@@ -486,10 +474,10 @@ window.PORTFOLIO_DATA = {
           ]
         },
         {
-          "title": "Crystal Zodiac Muse",
+          "title": "Pisces Couture Concept",
           "src": "assets/Zodiac Couture Concepts/photo_15_2026-04-23_19-06-35.jpg",
           "fileName": "photo_15_2026-04-23_19-06-35.jpg",
-          "description": "Crystal Zodiac Muse blends symbolic storytelling, atmospheric AI art, and celestial visual language.",
+          "description": "Pisces Couture Concept interprets Pisces through symbolic couture styling, celestial atmosphere, and polished AI art direction.",
           "tags": [
             "AI Art",
             "Prompt Design",

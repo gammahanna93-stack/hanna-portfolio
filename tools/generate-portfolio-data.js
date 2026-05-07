@@ -50,6 +50,21 @@ const descriptorByKeyword = [
   ["editorial", "Editorial AI concepts with cinematic framing, sophisticated styling, and premium visual storytelling."]
 ];
 
+const zodiacByFile = {
+  "photo_4_2026-04-23_19-06-35.jpg": ["Aries Couture Concept", "Aries"],
+  "photo_5_2026-04-23_19-06-35.jpg": ["Taurus Couture Concept", "Taurus"],
+  "photo_6_2026-04-23_19-06-35.jpg": ["Gemini Couture Concept", "Gemini"],
+  "photo_7_2026-04-23_19-06-35.jpg": ["Cancer Couture Concept", "Cancer"],
+  "photo_8_2026-04-23_19-06-35.jpg": ["Leo Couture Concept", "Leo"],
+  "photo_9_2026-04-23_19-06-35.jpg": ["Virgo Couture Concept", "Virgo"],
+  "photo_10_2026-04-23_19-06-35.jpg": ["Libra Couture Concept", "Libra"],
+  "photo_11_2026-04-23_19-06-35.jpg": ["Scorpio Couture Concept", "Scorpio"],
+  "photo_12_2026-04-23_19-06-35.jpg": ["Sagittarius Couture Concept", "Sagittarius"],
+  "photo_13_2026-04-23_19-06-35.jpg": ["Capricorn Couture Concept", "Capricorn"],
+  "photo_14_2026-04-23_19-06-35.jpg": ["Aquarius Couture Concept", "Aquarius"],
+  "photo_15_2026-04-23_19-06-35.jpg": ["Pisces Couture Concept", "Pisces"]
+};
+
 function toTitle(text) {
   return text
     .replace(/[_-]+/g, " ")
@@ -80,6 +95,10 @@ function categoryTags(folderName) {
 }
 
 function projectTitle(fileName, folderName, index) {
+  if (folderName.toLowerCase().includes("zodiac") && zodiacByFile[fileName]) {
+    return zodiacByFile[fileName][0];
+  }
+
   const base = cleanBaseName(fileName);
   const looksGeneric = /^(photo|promti)?[\s\d()_-]*$/i.test(base) || /\b20\d{2}\b/.test(base) || /^[a-f0-9]{8,}$/i.test(base);
   if (base.length > 2 && !looksGeneric) {
@@ -102,6 +121,10 @@ function projectTitle(fileName, folderName, index) {
 
 function projectDescription(folderName, title) {
   const lower = folderName.toLowerCase();
+  if (lower.includes("zodiac")) {
+    const sign = title.replace(" Couture Concept", "");
+    return `${title} interprets ${sign} through symbolic couture styling, celestial atmosphere, and polished AI art direction.`;
+  }
   if (lower.includes("carnival")) return `${title} uses playful styling, pastel color, and fairground atmosphere to create an AI fashion concept with strong social campaign appeal.`;
   if (lower.includes("romantic") || lower.includes("floral")) return `${title} combines soft florals, feminine couture details, and warm editorial light for a refined AI fashion story.`;
   if (lower.includes("luxury") || lower.includes("glam")) return `${title} builds a confident luxury portrait with polished accessories, cinematic lighting, and high-fashion prompt direction.`;
@@ -118,9 +141,16 @@ function projectDescription(folderName, title) {
 }
 
 function getImageFiles(directory) {
+  const seenSizes = new Set();
   return fs.readdirSync(directory, { withFileTypes: true })
     .filter((entry) => entry.isFile() && imageExtensions.has(path.extname(entry.name).toLowerCase()))
     .map((entry) => entry.name)
+    .filter((fileName) => {
+      const size = fs.statSync(path.join(directory, fileName)).size;
+      if (seenSizes.has(size)) return false;
+      seenSizes.add(size);
+      return true;
+    })
     .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
 }
 
