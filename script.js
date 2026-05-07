@@ -101,21 +101,7 @@ const defaultSiteContent = {
     threadsLabel: "Threads",
     threadsUrl: "https://www.threads.com/@hanna__ostroverkh",
     linkedinLabel: "LinkedIn",
-    linkedinUrl: "https://www.linkedin.com/in/hanna-ostroverkh-b8003a1a1/",
-    formLabels: {
-      name: "Name",
-      email: "Email",
-      projectType: "Project type",
-      message: "Message",
-      submit: "Send Inquiry"
-    },
-    projectTypes: [
-      "AI visual content",
-      "Prompt design",
-      "Canva presentation",
-      "Social media visuals",
-      "Branding moodboard"
-    ]
+    linkedinUrl: "https://www.linkedin.com/in/hanna-ostroverkh-b8003a1a1/"
   },
   footer: {
     name: "Hanna Ostroverkh",
@@ -137,7 +123,10 @@ const iconPaths = {
   pin: '<path d="M12 21s7-5.1 7-11a7 7 0 0 0-14 0c0 5.9 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/>',
   diamond: '<path d="M6 3h12l4 6-10 12L2 9l4-6z"/><path d="M2 9h20M8 3l-2 6 6 12 6-12-2-6"/>',
   compass: '<circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5 5-2z"/>',
-  flow: '<path d="M5 7h6M13 7h6M7 17h10"/><circle cx="4" cy="7" r="2"/><circle cx="12" cy="7" r="2"/><circle cx="20" cy="7" r="2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/>'
+  flow: '<path d="M5 7h6M13 7h6M7 17h10"/><circle cx="4" cy="7" r="2"/><circle cx="12" cy="7" r="2"/><circle cx="20" cy="7" r="2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/>',
+  mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
+  threads: '<path d="M16.5 10.2c-.5-3-2.2-4.8-5-4.8-3.4 0-5.5 2.6-5.5 6.5 0 4 2.2 6.7 6 6.7 3.5 0 5.8-2 5.8-4.7 0-2.2-1.6-3.6-4.3-3.6h-2.1"/><path d="M13.6 10.5c1.7.3 3.4 1.2 4.5 2.6 1.1 1.5 1.2 3.8-.2 5.6-1.4 1.9-3.6 2.8-6.3 2.8-5 0-8.3-3.7-8.3-9.3C3.3 6.6 6.8 2.5 12 2.5c4.4 0 7.1 2.5 8 6.9"/><path d="M13.5 13.6c-.2 1.2-1 2-2.3 2-1.2 0-2.1-.7-2.1-1.7 0-1.1.9-1.8 2.4-1.8h2.1"/>',
+  linkedin: '<path d="M6.5 10v8"/><path d="M10.5 18v-4.4c0-2.2 1.2-3.6 3.1-3.6 1.8 0 2.9 1.2 2.9 3.5V18"/><path d="M6.5 6.6v.1"/><rect x="3" y="3" width="18" height="18" rx="2"/>'
 };
 
 function escapeHtml(value) {
@@ -260,17 +249,36 @@ function renderStaticContent() {
   setHref("[data-contact-threads]", siteContent.contact.threadsUrl);
   setText("[data-contact-linkedin]", siteContent.contact.linkedinLabel);
   setHref("[data-contact-linkedin]", siteContent.contact.linkedinUrl);
-  setText("[data-form-name]", siteContent.contact.formLabels.name);
-  setText("[data-form-email]", siteContent.contact.formLabels.email);
-  setText("[data-form-project]", siteContent.contact.formLabels.projectType);
-  setText("[data-form-message]", siteContent.contact.formLabels.message);
-  setText("[data-form-submit]", siteContent.contact.formLabels.submit);
-  document.querySelector("[data-project-types]").innerHTML = siteContent.contact.projectTypes.map((type) => `<option>${escapeHtml(type)}</option>`).join("");
-
-  const form = document.querySelector("[data-contact-form]");
-  form.action = `mailto:${siteContent.contact.email}`;
+  renderContactCard();
   setText("[data-footer-name]", siteContent.footer.name);
   setText("[data-footer-tagline]", siteContent.footer.tagline);
+}
+
+function renderContactCard() {
+  const target = document.querySelector("[data-contact-card]");
+  target.innerHTML = `
+    <a class="contact-method" href="mailto:${escapeHtml(siteContent.contact.email)}">
+      <span class="contact-icon">${icon("mail")}</span>
+      <span>
+        <small>Email</small>
+        <strong>${escapeHtml(siteContent.contact.email)}</strong>
+      </span>
+    </a>
+    <a class="contact-method" href="${escapeHtml(siteContent.contact.threadsUrl)}" target="_blank" rel="noopener noreferrer">
+      <span class="contact-icon">${icon("threads")}</span>
+      <span>
+        <small>${escapeHtml(siteContent.contact.threadsLabel)}</small>
+        <strong>@hanna__ostroverkh</strong>
+      </span>
+    </a>
+    <a class="contact-method" href="${escapeHtml(siteContent.contact.linkedinUrl)}" target="_blank" rel="noopener noreferrer">
+      <span class="contact-icon">${icon("linkedin")}</span>
+      <span>
+        <small>${escapeHtml(siteContent.contact.linkedinLabel)}</small>
+        <strong>Hanna Ostroverkh</strong>
+      </span>
+    </a>
+  `;
 }
 
 function renderHeroShowcase() {
@@ -560,38 +568,6 @@ function initNav() {
   });
 }
 
-function initContactForm() {
-  const form = document.querySelector("[data-contact-form]");
-  const status = document.querySelector("[data-form-status]");
-
-  form.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const data = new FormData(form);
-    const name = data.get("name") || "";
-    const email = data.get("email") || "";
-    const projectType = data.get("project_type") || "";
-    const message = data.get("message") || "";
-    const subject = `Portfolio inquiry from ${name}`;
-    const body = [
-      `Name: ${name}`,
-      `Email: ${email}`,
-      `Project type: ${projectType}`,
-      "",
-      "Message:",
-      message
-    ].join("\n");
-
-    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(siteContent.contact.email)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    const opened = window.open(gmailUrl, "_blank", "noopener,noreferrer");
-
-    if (opened) {
-      status.textContent = "Gmail draft opened in a new tab.";
-    } else {
-      status.innerHTML = `<a href="${gmailUrl}" target="_blank" rel="noopener noreferrer">Open Gmail draft</a>`;
-    }
-  });
-}
-
 document.querySelectorAll("[data-project-modal-close]").forEach((button) => {
   button.addEventListener("click", closeProjectModal);
 });
@@ -606,4 +582,3 @@ loadAdminState();
 renderAll();
 initAdminPanel();
 initNav();
-initContactForm();

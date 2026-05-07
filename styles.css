@@ -428,7 +428,7 @@ h3 {
 
 .service-card,
 .project-card,
-.contact-form,
+.contact-card,
 .empty-state {
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -695,53 +695,61 @@ h3 {
 }
 
 .contact-links {
+  display: none;
+}
+
+.contact-card {
   display: grid;
   gap: 12px;
-  margin-top: 30px;
-  color: var(--muted);
-  font-weight: 800;
-}
-
-.contact-links a:hover {
-  color: var(--gold);
-}
-
-.contact-form {
-  display: grid;
-  gap: 16px;
   padding: clamp(22px, 4vw, 34px);
 }
 
-.contact-form label {
+.contact-method {
   display: grid;
-  gap: 7px;
-  color: var(--muted);
-  font-size: 0.82rem;
-  font-weight: 800;
-}
-
-.contact-form input,
-.contact-form select,
-.contact-form textarea {
-  width: 100%;
+  grid-template-columns: 46px minmax(0, 1fr);
+  gap: 14px;
+  align-items: center;
   border: 1px solid var(--line);
   border-radius: var(--radius);
+  padding: 16px;
+  background: rgba(255, 253, 249, 0.72);
+  transition: transform 220ms ease, border-color 220ms ease, background 220ms ease;
+}
+
+.contact-method:hover {
+  border-color: rgba(181, 138, 69, 0.44);
   background: var(--white);
-  color: var(--ink);
-  padding: 13px 14px;
-  outline: none;
+  transform: translateY(-2px);
 }
 
-.contact-form input:focus,
-.contact-form select:focus,
-.contact-form textarea:focus {
-  border-color: var(--gold);
+.contact-icon {
+  display: grid;
+  width: 46px;
+  height: 46px;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--gold);
 }
 
-.form-status {
-  margin: 0;
+.contact-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.contact-method small {
+  display: block;
+  margin-bottom: 2px;
   color: var(--muted);
-  font-size: 0.82rem;
+  font-size: 0.74rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.contact-method strong {
+  display: block;
+  overflow-wrap: anywhere;
+  font-size: 1rem;
 }
 
 .site-footer {
