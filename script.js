@@ -36,20 +36,42 @@ const defaultSiteContent = {
     heading: "Creative AI support for visual brands."
   },
   services: [
-    { title: "AI Image Prompt Design", description: "Prompt systems for consistent, high-quality image generation across campaigns and visual identities.", icon: "spark" },
-    { title: "AI Visual Content", description: "Aesthetic visuals for digital launches, social media, editorials, and online brand presence.", icon: "image" },
-    { title: "Canva Presentations", description: "Elegant pitch decks, portfolio pages, brand guides, and educational content designed in Canva.", icon: "layout" },
-    { title: "Social Media Content", description: "Instagram, Pinterest, and campaign-ready visual concepts with clear creative direction.", icon: "grid" },
-    { title: "Branding Moodboards", description: "Refined moodboards that define tone, color, styling, references, and brand atmosphere.", icon: "palette" },
-    { title: "Pinterest Visual Concepts", description: "Search-friendly visual ideas and boards shaped for inspiration-led discovery.", icon: "pin" },
-    { title: "Beauty & Fashion AI Concepts", description: "Editorial AI imagery for beauty, fashion, personal brands, and product storytelling.", icon: "diamond" },
-    { title: "Creative Direction", description: "Concept development, art direction, visual systems, and premium aesthetic guidance.", icon: "compass" },
-    { title: "AI Content Workflows", description: "Repeatable workflows for generating, selecting, editing, and publishing AI-assisted content.", icon: "flow" }
+    { title: "AI Visual Content", description: "Premium AI-generated visuals for launches, social platforms, digital brands, fashion, beauty, and lifestyle communication.", icon: "image" },
+    { title: "Prompt Design Systems", description: "Structured prompt systems that support consistent style, repeatable aesthetics, and scalable AI content creation.", icon: "spark" },
+    { title: "Editorial Creative Direction", description: "Fashion-inspired and beauty-focused visual direction shaped through mood, lighting, composition, and storytelling.", icon: "compass" },
+    { title: "Canva Presentations", description: "Elegant Canva decks, visual proposals, brand presentations, and content layouts for online communication.", icon: "layout" },
+    { title: "Social Media Visual Concepts", description: "Instagram, Threads, Pinterest, and creator-ready visual concepts with a polished, recognizable brand mood.", icon: "grid" },
+    { title: "Brand Moodboards", description: "Refined moodboards that define color, texture, references, styling direction, and digital aesthetic positioning.", icon: "palette" }
   ],
-  featuredSection: {
-    eyebrow: "Featured projects",
-    heading: "Editorial showcases selected for visual impact."
+  directionsSection: {
+    eyebrow: "Portfolio value",
+    heading: "Selected Visual Directions",
+    subtitle: "Concept-based AI portfolio projects designed to show aesthetic direction, prompt thinking, and scalable visual systems.",
+    note: "Note: These are independent AI portfolio concepts created to demonstrate visual direction, prompt design, and content system thinking.",
+    cta: "Discuss a Visual Project"
   },
+  directions: [
+    {
+      title: "AI Visuals for Social Media",
+      label: "AI-візуали для соцмереж",
+      description: "AI-generated visual content for Instagram, Threads, Pinterest, launches, personal brands, fashion, beauty, and lifestyle projects. These concepts show how a brand can build a consistent, premium visual presence across platforms."
+    },
+    {
+      title: "Prompt Systems for Scalable Content",
+      label: "Prompt-системи для масштабованого контенту",
+      description: "Structured prompt concepts that help create multiple visuals in one recognizable aesthetic. The focus is on consistency, repeatable style, brand mood, and scalable AI content workflows."
+    },
+    {
+      title: "Editorial Concepts for Brands",
+      label: "Editorial-концепти для брендів",
+      description: "Fashion-inspired and beauty-focused AI editorials built around mood, composition, lighting, styling, and storytelling. These visuals demonstrate creative direction for campaigns, lookbooks, and premium brand communication."
+    },
+    {
+      title: "Luxury Digital Storytelling",
+      label: "Luxury digital storytelling",
+      description: "Premium visual narratives that create atmosphere, emotion, and identity for digital brands and creators. The focus is not only on beautiful images, but on building a recognizable visual world."
+    }
+  ],
   portfolioSection: {
     eyebrow: "Portfolio",
     heading: "AI visuals organized by concept and aesthetic."
@@ -143,12 +165,20 @@ function setHref(selector, value) {
 
 function loadAdminState() {
   const saved = localStorage.getItem(STORAGE_KEY);
-  if (!saved) return;
+  if (!saved) {
+    portfolioData = normalizePortfolioData(portfolioData);
+    return;
+  }
 
   try {
     const parsed = JSON.parse(saved);
     if (parsed.siteContent) siteContent = parsed.siteContent;
     if (parsed.portfolioData) portfolioData = parsed.portfolioData;
+    if (!siteContent.directionsSection) {
+      siteContent.directionsSection = defaultSiteContent.directionsSection;
+      siteContent.directions = defaultSiteContent.directions;
+    }
+    portfolioData = normalizePortfolioData(portfolioData);
     if (!siteContent.contact.threadsUrl) {
       siteContent.contact.threadsLabel = defaultSiteContent.contact.threadsLabel;
       siteContent.contact.threadsUrl = defaultSiteContent.contact.threadsUrl;
@@ -162,7 +192,22 @@ function loadAdminState() {
 }
 
 function saveAdminState() {
+  portfolioData = normalizePortfolioData(portfolioData);
   localStorage.setItem(STORAGE_KEY, JSON.stringify({ siteContent, portfolioData }));
+}
+
+function normalizePortfolioData(data) {
+  const duplicateFiles = new Set([
+    "promti_1777295376750.png"
+  ]);
+
+  return {
+    ...data,
+    categories: (data.categories || []).map((category) => ({
+      ...category,
+      projects: (category.projects || []).filter((project) => !duplicateFiles.has(project.fileName))
+    }))
+  };
 }
 
 function renderStaticContent() {
@@ -193,8 +238,15 @@ function renderStaticContent() {
 
   setText("[data-services-eyebrow]", siteContent.servicesSection.eyebrow);
   setText("[data-services-heading]", siteContent.servicesSection.heading);
-  setText("[data-featured-eyebrow]", siteContent.featuredSection.eyebrow);
-  setText("[data-featured-heading]", siteContent.featuredSection.heading);
+  if (!siteContent.directionsSection) {
+    siteContent.directionsSection = defaultSiteContent.directionsSection;
+    siteContent.directions = defaultSiteContent.directions;
+  }
+  setText("[data-directions-eyebrow]", siteContent.directionsSection.eyebrow);
+  setText("[data-directions-heading]", siteContent.directionsSection.heading);
+  setText("[data-directions-subtitle]", siteContent.directionsSection.subtitle);
+  setText("[data-directions-note]", siteContent.directionsSection.note);
+  setText("[data-directions-cta]", siteContent.directionsSection.cta);
   setText("[data-portfolio-eyebrow]", siteContent.portfolioSection.eyebrow);
   setText("[data-portfolio-heading]", siteContent.portfolioSection.heading);
   setText("[data-skills-eyebrow]", siteContent.skillsSection.eyebrow);
@@ -282,6 +334,18 @@ function renderServices() {
   `).join("");
 }
 
+function renderDirections() {
+  const target = document.querySelector("[data-directions]");
+  target.innerHTML = (siteContent.directions || []).map((item, index) => `
+    <article class="direction-card reveal">
+      <span class="direction-number">${String(index + 1).padStart(2, "0")}</span>
+      <h3>${escapeHtml(item.title)}</h3>
+      <p class="direction-label">${escapeHtml(item.label)}</p>
+      <p>${escapeHtml(item.description)}</p>
+    </article>
+  `).join("");
+}
+
 function renderSkills() {
   document.querySelector("[data-skills]").innerHTML = siteContent.skills.map((skill, index) => (
     `<span class="skill-pill" style="animation-delay:${index * 80}ms">${escapeHtml(skill)}</span>`
@@ -307,24 +371,20 @@ function renderFilters(categories) {
   };
 }
 
-function projectCard(project, index) {
-  const isOpen = index === 0;
+function projectCard(project) {
   return `
-    <article class="project-card reveal ${isOpen ? "is-open" : ""}" data-project-card>
-      <button class="project-toggle" type="button" aria-expanded="${isOpen ? "true" : "false"}">
-        <span>${escapeHtml(project.title)}</span>
-        <small>${escapeHtml((project.tags || []).slice(0, 2).join(" / "))}</small>
-        <i aria-hidden="true"></i>
-      </button>
-      <div class="project-content">
-        <div class="project-image">
-          <img src="${escapeHtml(project.src)}" alt="${escapeHtml(project.title)}" loading="lazy">
-        </div>
-        <div class="project-body">
-          <p>${escapeHtml(project.description)}</p>
-          <div class="tag-list">${(project.tags || []).map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("")}</div>
-        </div>
+    <article class="project-card reveal">
+      <button class="project-open" type="button" data-project-open="${escapeHtml(project.src)}">
+      <div class="project-image">
+        <img src="${escapeHtml(project.src)}" alt="${escapeHtml(project.title)}" loading="lazy">
       </div>
+      <div class="project-body">
+        <p class="eyebrow">${escapeHtml((project.tags || [])[0] || "AI Visuals")}</p>
+        <h3>${escapeHtml(project.title)}</h3>
+        <p>${escapeHtml(project.description)}</p>
+        <div class="tag-list">${(project.tags || []).slice(0, 3).map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("")}</div>
+      </div>
+      </button>
     </article>
   `;
 }
@@ -332,7 +392,6 @@ function projectCard(project, index) {
 function renderPortfolio() {
   const categories = portfolioData.categories || [];
   const categoryTarget = document.querySelector("[data-categories]");
-  const featuredTarget = document.querySelector("[data-featured]");
 
   if (!categories.length) {
     const message = `
@@ -343,7 +402,6 @@ function renderPortfolio() {
       </div>
     `;
     categoryTarget.innerHTML = message;
-    featuredTarget.innerHTML = message;
     renderFilters([]);
     return;
   }
@@ -360,68 +418,40 @@ function renderPortfolio() {
       </div>
     </section>
   `).join("");
-  initProjectAccordions();
+  initProjectModal();
+}
 
-  const featured = getFeaturedProjects(categories);
-  featuredTarget.innerHTML = featured.map((project) => `
-    <article class="featured-card reveal">
-      <div class="featured-media">
-        <img src="${escapeHtml(project.src)}" alt="${escapeHtml(project.title)}" loading="lazy">
-      </div>
-      <div class="featured-body">
+function initProjectModal() {
+  const modal = document.querySelector("[data-project-modal]");
+  const media = document.querySelector("[data-project-modal-media]");
+  const content = document.querySelector("[data-project-modal-content]");
+  const projects = (portfolioData.categories || [])
+    .flatMap((category) => (category.projects || []).map((project) => ({ ...project, category: category.title })));
+
+  document.querySelectorAll("[data-project-open]").forEach((button) => {
+    button.onclick = () => {
+      const project = projects.find((item) => item.src === button.dataset.projectOpen);
+      if (!project) return;
+
+      media.innerHTML = `<img src="${escapeHtml(project.src)}" alt="${escapeHtml(project.title)}">`;
+      content.innerHTML = `
         <p class="eyebrow">${escapeHtml(project.category)}</p>
         <h3>${escapeHtml(project.title)}</h3>
         <p>${escapeHtml(project.description)}</p>
-        <div class="tag-list">${(project.tags || []).slice(0, 4).map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("")}</div>
-      </div>
-    </article>
-  `).join("");
-}
-
-function initProjectAccordions() {
-  document.querySelectorAll(".category-block").forEach((categoryBlock) => {
-    categoryBlock.addEventListener("click", (event) => {
-      const toggle = event.target.closest(".project-toggle");
-      if (!toggle || !categoryBlock.contains(toggle)) return;
-
-      const card = toggle.closest("[data-project-card]");
-      const wasOpen = card.classList.contains("is-open");
-
-      categoryBlock.querySelectorAll("[data-project-card]").forEach((item) => {
-        item.classList.remove("is-open");
-        item.querySelector(".project-toggle").setAttribute("aria-expanded", "false");
-      });
-
-      if (!wasOpen) {
-        card.classList.add("is-open");
-        toggle.setAttribute("aria-expanded", "true");
-      }
-    });
+        <div class="tag-list">${(project.tags || []).map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("")}</div>
+      `;
+      modal.classList.add("is-open");
+      modal.setAttribute("aria-hidden", "false");
+      document.body.classList.add("modal-open");
+    };
   });
 }
 
-function getFeaturedProjects(categories) {
-  const categoryPicks = categories
-    .map((category, index) => {
-      const projects = category.projects || [];
-      if (!projects.length) return null;
-      const pickIndex = Math.min(index, projects.length - 1);
-      return { ...projects[pickIndex], category: category.title };
-    })
-    .filter(Boolean);
-
-  const preferredOrder = [
-    "Luxury Glam Portraits",
-    "Zodiac Couture Concepts",
-    "Carnival Candy Editorials",
-    "Botanical Fantasy Fashion",
-    "Pop Candy Visual Concepts",
-    "Romantic Floral Fashion"
-  ];
-
-  return categoryPicks
-    .sort((a, b) => preferredOrder.indexOf(a.category) - preferredOrder.indexOf(b.category))
-    .slice(0, 6);
+function closeProjectModal() {
+  const modal = document.querySelector("[data-project-modal]");
+  modal.classList.remove("is-open");
+  modal.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("modal-open");
 }
 
 function populateAdminPanel() {
@@ -432,6 +462,7 @@ function populateAdminPanel() {
 function renderAll() {
   renderStaticContent();
   renderServices();
+  renderDirections();
   renderSkills();
   renderPortfolio();
   initReveal();
@@ -554,6 +585,16 @@ function initContactForm() {
     status.textContent = "Your email app should open with a prepared message. If it does not, please write directly to the email above.";
   });
 }
+
+document.querySelectorAll("[data-project-modal-close]").forEach((button) => {
+  button.addEventListener("click", closeProjectModal);
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    closeProjectModal();
+  }
+});
 
 loadAdminState();
 renderAll();

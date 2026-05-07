@@ -78,13 +78,18 @@
         </div>
       </section>
 
-      <section class="featured section-band" id="featured">
+      <section class="directions section-band" id="directions">
         <div class="section-inner">
-          <div class="section-heading reveal">
-            <p class="eyebrow" data-featured-eyebrow>Featured projects</p>
-            <h2 data-featured-heading>Editorial showcases selected for visual impact.</h2>
+          <div class="section-heading centered reveal">
+            <p class="eyebrow" data-directions-eyebrow>Portfolio value</p>
+            <h2 data-directions-heading>Selected Visual Directions</h2>
+            <p class="section-subtitle" data-directions-subtitle>Concept-based AI portfolio projects designed to show aesthetic direction, prompt thinking, and scalable visual systems.</p>
           </div>
-          <div class="featured-grid" data-featured></div>
+          <div class="directions-grid" data-directions></div>
+          <p class="directions-note reveal" data-directions-note>Note: These are independent AI portfolio concepts created to demonstrate visual direction, prompt design, and content system thinking.</p>
+          <div class="directions-cta reveal">
+            <a class="btn secondary" href="#contact" data-directions-cta>Discuss a Visual Project</a>
+          </div>
         </div>
       </section>
 
@@ -182,6 +187,15 @@
       </div>
       <p class="admin-status" data-admin-status></p>
     </aside>
+
+    <div class="project-modal" data-project-modal aria-hidden="true">
+      <div class="project-modal-backdrop" data-project-modal-close></div>
+      <article class="project-modal-card" role="dialog" aria-modal="true" aria-label="Portfolio project">
+        <button class="project-modal-close" type="button" data-project-modal-close aria-label="Close project">Close</button>
+        <div class="project-modal-media" data-project-modal-media></div>
+        <div class="project-modal-content" data-project-modal-content></div>
+      </article>
+    </div>
 
     <script src="assets/portfolio-data.js"></script>
     <script src="script.js"></script>
