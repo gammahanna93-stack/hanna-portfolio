@@ -9,6 +9,7 @@ const defaultSiteContent = {
   nav: [
     { label: "About", href: "#about" },
     { label: "Services", href: "#services" },
+    { label: "Motion", href: "#motion" },
     { label: "Portfolio", href: "#portfolio" },
     { label: "Skills", href: "#skills" },
     { label: "Contact", href: "#contact" }
@@ -53,23 +54,68 @@ const defaultSiteContent = {
   directions: [
     {
       title: "AI Visuals for Social Media",
-      label: "AI-візуали для соцмереж",
+      label: "Social media AI visuals",
       description: "AI-generated visual content for Instagram, Threads, Pinterest, launches, personal brands, fashion, beauty, and lifestyle projects. These concepts show how a brand can build a consistent, premium visual presence across platforms."
     },
     {
       title: "Prompt Systems for Scalable Content",
-      label: "Prompt-системи для масштабованого контенту",
+      label: "Scalable prompt systems",
       description: "Structured prompt concepts that help create multiple visuals in one recognizable aesthetic. The focus is on consistency, repeatable style, brand mood, and scalable AI content workflows."
     },
     {
       title: "Editorial Concepts for Brands",
-      label: "Editorial-концепти для брендів",
+      label: "Editorial brand concepts",
       description: "Fashion-inspired and beauty-focused AI editorials built around mood, composition, lighting, styling, and storytelling. These visuals demonstrate creative direction for campaigns, lookbooks, and premium brand communication."
     },
     {
       title: "Luxury Digital Storytelling",
       label: "Luxury digital storytelling",
       description: "Premium visual narratives that create atmosphere, emotion, and identity for digital brands and creators. The focus is not only on beautiful images, but on building a recognizable visual world."
+    }
+  ],
+  motionSection: {
+    eyebrow: "Cinematic AI Motion",
+    heading: "Motion Direction",
+    subtitle: "Cinematic AI visuals focused on atmosphere, movement, editorial aesthetics, and luxury digital storytelling.",
+    note: "These motion works show how static AI visuals can become elegant short-form cinematic content for social media, campaigns, beauty, fashion, personal brands, and digital storytelling.",
+    cta: "Create Motion Visuals"
+  },
+  motion: [
+    {
+      title: "Editorial Fashion Motion",
+      description: "A cinematic fashion-inspired motion concept with soft movement, premium styling, and editorial pacing.",
+      src: "assets/videos/1000124258.mp4",
+      label: "Editorial Fashion Motion"
+    },
+    {
+      title: "Luxury Beauty Atmosphere",
+      description: "A beauty-focused AI motion visual built around light, atmosphere, close-up emotion, and luxury mood.",
+      src: "assets/videos/1000124228.mp4",
+      label: "Luxury Beauty Atmosphere"
+    },
+    {
+      title: "Cinematic Floral Storytelling",
+      description: "A floral visual story using elegant movement, cinematic softness, and refined digital storytelling.",
+      src: "assets/videos/1000123153.mp4",
+      label: "Cinematic Floral Storytelling"
+    },
+    {
+      title: "Soft Glam Visual Loop",
+      description: "A soft glam AI loop designed for premium social media presence and aesthetic brand communication.",
+      src: "assets/videos/1000121079.mp4",
+      label: "Soft Glam Visual Loop"
+    },
+    {
+      title: "Dreamy Campaign Motion",
+      description: "A dreamy campaign-style motion piece created to feel atmospheric, polished, and brand-ready.",
+      src: "assets/videos/1000120823.mp4",
+      label: "Dreamy Campaign Motion"
+    },
+    {
+      title: "AI Fashion Film Study",
+      description: "An experimental AI fashion film study focused on visual direction, mood, and cinematic elegance.",
+      src: "assets/videos/1000114040.mp4",
+      label: "AI Fashion Film Study"
     }
   ],
   portfolioSection: {
@@ -167,6 +213,12 @@ function loadAdminState() {
       siteContent.directionsSection = defaultSiteContent.directionsSection;
       siteContent.directions = defaultSiteContent.directions;
     }
+    if (!siteContent.motionSection) {
+      siteContent.motionSection = defaultSiteContent.motionSection;
+      siteContent.motion = defaultSiteContent.motion;
+    }
+    normalizeEnglishLabels();
+    ensureMotionNavigation();
     portfolioData = normalizePortfolioData(portfolioData);
     if (!siteContent.contact.threadsUrl) {
       siteContent.contact.threadsLabel = defaultSiteContent.contact.threadsLabel;
@@ -181,8 +233,30 @@ function loadAdminState() {
 }
 
 function saveAdminState() {
+  ensureMotionNavigation();
   portfolioData = normalizePortfolioData(portfolioData);
   localStorage.setItem(STORAGE_KEY, JSON.stringify({ siteContent, portfolioData }));
+}
+
+function ensureMotionNavigation() {
+  const hasMotion = (siteContent.nav || []).some((item) => item.href === "#motion");
+  if (hasMotion) return;
+
+  const portfolioIndex = (siteContent.nav || []).findIndex((item) => item.href === "#portfolio");
+  const motionLink = { label: "Motion", href: "#motion" };
+  if (portfolioIndex >= 0) {
+    siteContent.nav.splice(portfolioIndex, 0, motionLink);
+  } else {
+    siteContent.nav.push(motionLink);
+  }
+}
+
+function normalizeEnglishLabels() {
+  const labelByTitle = new Map(defaultSiteContent.directions.map((item) => [item.title, item.label]));
+  siteContent.directions = (siteContent.directions || []).map((item) => ({
+    ...item,
+    label: labelByTitle.get(item.title) || item.label
+  }));
 }
 
 function normalizePortfolioData(data) {
@@ -202,6 +276,8 @@ function normalizePortfolioData(data) {
 function renderStaticContent() {
   setText("[data-brand-initials]", siteContent.brand.initials);
   setText("[data-brand-name]", siteContent.brand.name);
+  normalizeEnglishLabels();
+  ensureMotionNavigation();
 
   const nav = document.querySelector("[data-nav]");
   nav.innerHTML = siteContent.nav.map((item) => `<a href="${escapeHtml(item.href)}">${escapeHtml(item.label)}</a>`).join("");
@@ -236,6 +312,15 @@ function renderStaticContent() {
   setText("[data-directions-subtitle]", siteContent.directionsSection.subtitle);
   setText("[data-directions-note]", siteContent.directionsSection.note);
   setText("[data-directions-cta]", siteContent.directionsSection.cta);
+  if (!siteContent.motionSection) {
+    siteContent.motionSection = defaultSiteContent.motionSection;
+    siteContent.motion = defaultSiteContent.motion;
+  }
+  setText("[data-motion-eyebrow]", siteContent.motionSection.eyebrow);
+  setText("[data-motion-heading]", siteContent.motionSection.heading);
+  setText("[data-motion-subtitle]", siteContent.motionSection.subtitle);
+  setText("[data-motion-note]", siteContent.motionSection.note);
+  setText("[data-motion-cta]", siteContent.motionSection.cta);
   setText("[data-portfolio-eyebrow]", siteContent.portfolioSection.eyebrow);
   setText("[data-portfolio-heading]", siteContent.portfolioSection.heading);
   setText("[data-skills-eyebrow]", siteContent.skillsSection.eyebrow);
@@ -350,6 +435,25 @@ function renderDirections() {
       <h3>${escapeHtml(item.title)}</h3>
       <p class="direction-label">${escapeHtml(item.label)}</p>
       <p>${escapeHtml(item.description)}</p>
+    </article>
+  `).join("");
+}
+
+function renderMotion() {
+  const target = document.querySelector("[data-motion-grid]");
+  target.innerHTML = (siteContent.motion || []).map((item, index) => `
+    <article class="motion-card reveal">
+      <div class="motion-video-wrap">
+        <video class="motion-video" autoplay muted loop playsinline preload="metadata" aria-label="${escapeHtml(item.label || item.title)}">
+          <source src="${escapeHtml(item.src)}" type="video/mp4">
+          Your browser does not support this video.
+        </video>
+        <span class="motion-index">${String(index + 1).padStart(2, "0")}</span>
+      </div>
+      <div class="motion-card-content">
+        <h3 class="motion-card-title">${escapeHtml(item.title)}</h3>
+        <p class="motion-card-description">${escapeHtml(item.description)}</p>
+      </div>
     </article>
   `).join("");
 }
@@ -471,6 +575,7 @@ function renderAll() {
   renderStaticContent();
   renderServices();
   renderDirections();
+  renderMotion();
   renderSkills();
   renderPortfolio();
   initReveal();
