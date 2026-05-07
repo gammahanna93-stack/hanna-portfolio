@@ -581,8 +581,14 @@ function initContactForm() {
       message
     ].join("\n");
 
-    window.location.href = `mailto:${siteContent.contact.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    status.textContent = "Your email app should open with a prepared message. If it does not, please write directly to the email above.";
+    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(siteContent.contact.email)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    const opened = window.open(gmailUrl, "_blank", "noopener,noreferrer");
+
+    if (opened) {
+      status.textContent = "Gmail draft opened in a new tab.";
+    } else {
+      status.innerHTML = `<a href="${gmailUrl}" target="_blank" rel="noopener noreferrer">Open Gmail draft</a>`;
+    }
   });
 }
 
