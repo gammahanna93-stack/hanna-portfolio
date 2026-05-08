@@ -264,8 +264,13 @@ function normalizeEnglishLabels() {
 function normalizeMotionPaths() {
   siteContent.motion = (siteContent.motion || []).map((item) => ({
     ...item,
-    src: item.src ? item.src.split("/").pop() : item.src
+    src: item.src ? item.src.split("/").pop().split("\\").pop() : item.src
   }));
+}
+
+function getMotionSources(src) {
+  const fileName = src ? src.split("/").pop().split("\\").pop() : "";
+  return [...new Set([fileName, `assets/videos/${fileName}`].filter(Boolean))];
 }
 
 function normalizePortfolioData(data) {
@@ -455,9 +460,10 @@ function renderMotion() {
     <article class="motion-card reveal">
       <div class="motion-video-wrap">
         <video class="motion-video" autoplay muted loop playsinline preload="metadata" aria-label="${escapeHtml(item.label || item.title)}">
-          <source src="${escapeHtml(item.src)}" type="video/mp4">
+          ${getMotionSources(item.src).map((src) => `<source src="${escapeHtml(src)}" type="video/mp4">`).join("")}
           Your browser does not support this video.
         </video>
+        <button class="motion-sound-toggle" type="button" data-motion-sound aria-label="Turn sound on">Sound</button>
         <span class="motion-index">${String(index + 1).padStart(2, "0")}</span>
       </div>
       <div class="motion-card-content">
@@ -466,6 +472,31 @@ function renderMotion() {
       </div>
     </article>
   `).join("");
+  initMotionControls();
+}
+
+function initMotionControls() {
+  document.querySelectorAll(".motion-video").forEach((video) => {
+    video.addEventListener("loadeddata", () => {
+      video.closest(".motion-video-wrap")?.classList.add("is-loaded");
+    });
+    video.addEventListener("error", () => {
+      video.closest(".motion-video-wrap")?.classList.add("has-video-error");
+    });
+  });
+
+  document.querySelectorAll("[data-motion-sound]").forEach((button) => {
+    const video = button.closest(".motion-video-wrap")?.querySelector(".motion-video");
+    if (!video) return;
+
+    button.addEventListener("click", () => {
+      video.muted = !video.muted;
+      video.play().catch(() => {});
+      button.textContent = video.muted ? "Sound" : "Mute";
+      button.setAttribute("aria-label", video.muted ? "Turn sound on" : "Turn sound off");
+      button.classList.toggle("is-active", !video.muted);
+    });
+  });
 }
 
 function renderSkills() {
