@@ -84,37 +84,37 @@ const defaultSiteContent = {
     {
       title: "Editorial Fashion Motion",
       description: "A cinematic fashion-inspired motion concept with soft movement, premium styling, and editorial pacing.",
-      src: "assets/videos/1000124258.mp4",
+      src: "1000124258.mp4",
       label: "Editorial Fashion Motion"
     },
     {
       title: "Luxury Beauty Atmosphere",
       description: "A beauty-focused AI motion visual built around light, atmosphere, close-up emotion, and luxury mood.",
-      src: "assets/videos/1000124228.mp4",
+      src: "1000124228.mp4",
       label: "Luxury Beauty Atmosphere"
     },
     {
       title: "Cinematic Floral Storytelling",
       description: "A floral visual story using elegant movement, cinematic softness, and refined digital storytelling.",
-      src: "assets/videos/1000123153.mp4",
+      src: "1000123153.mp4",
       label: "Cinematic Floral Storytelling"
     },
     {
       title: "Soft Glam Visual Loop",
       description: "A soft glam AI loop designed for premium social media presence and aesthetic brand communication.",
-      src: "assets/videos/1000121079.mp4",
+      src: "1000121079.mp4",
       label: "Soft Glam Visual Loop"
     },
     {
       title: "Dreamy Campaign Motion",
       description: "A dreamy campaign-style motion piece created to feel atmospheric, polished, and brand-ready.",
-      src: "assets/videos/1000120823.mp4",
+      src: "1000120823.mp4",
       label: "Dreamy Campaign Motion"
     },
     {
       title: "AI Fashion Film Study",
       description: "An experimental AI fashion film study focused on visual direction, mood, and cinematic elegance.",
-      src: "assets/videos/1000114040.mp4",
+      src: "1000114040.mp4",
       label: "AI Fashion Film Study"
     }
   ],
@@ -217,6 +217,7 @@ function loadAdminState() {
       siteContent.motionSection = defaultSiteContent.motionSection;
       siteContent.motion = defaultSiteContent.motion;
     }
+    normalizeMotionPaths();
     normalizeEnglishLabels();
     ensureMotionNavigation();
     portfolioData = normalizePortfolioData(portfolioData);
@@ -234,6 +235,7 @@ function loadAdminState() {
 
 function saveAdminState() {
   ensureMotionNavigation();
+  normalizeMotionPaths();
   portfolioData = normalizePortfolioData(portfolioData);
   localStorage.setItem(STORAGE_KEY, JSON.stringify({ siteContent, portfolioData }));
 }
@@ -256,6 +258,13 @@ function normalizeEnglishLabels() {
   siteContent.directions = (siteContent.directions || []).map((item) => ({
     ...item,
     label: labelByTitle.get(item.title) || item.label
+  }));
+}
+
+function normalizeMotionPaths() {
+  siteContent.motion = (siteContent.motion || []).map((item) => ({
+    ...item,
+    src: item.src ? item.src.split("/").pop() : item.src
   }));
 }
 
@@ -316,6 +325,7 @@ function renderStaticContent() {
     siteContent.motionSection = defaultSiteContent.motionSection;
     siteContent.motion = defaultSiteContent.motion;
   }
+  normalizeMotionPaths();
   setText("[data-motion-eyebrow]", siteContent.motionSection.eyebrow);
   setText("[data-motion-heading]", siteContent.motionSection.heading);
   setText("[data-motion-subtitle]", siteContent.motionSection.subtitle);
