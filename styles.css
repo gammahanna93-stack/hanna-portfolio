@@ -522,8 +522,8 @@ h3 {
 
 .motion-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
 }
 
 .motion-card {
@@ -543,7 +543,7 @@ h3 {
 
 .motion-video-wrap {
   position: relative;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 9 / 16;
   overflow: hidden;
   background: linear-gradient(135deg, var(--sand), var(--cream));
 }
@@ -1206,7 +1206,7 @@ body.modal-open {
   }
 
   .motion-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .portfolio-head {
@@ -1247,7 +1247,11 @@ body.modal-open {
   }
 
   .motion-video-wrap {
-    aspect-ratio: 4 / 5;
+    aspect-ratio: 9 / 16;
+  }
+
+  .motion-grid {
+    grid-template-columns: 1fr;
   }
 
   .masonry-grid {
